@@ -6,7 +6,7 @@ Statistical analysis of airline passenger satisfaction using R, analyzing factor
 This project analyzes airline passenger satisfaction data to understand key factors affecting customer satisfaction levels. The analysis uses statistical methods including multiple regression models and logistic regression to identify the most significant contributors to passenger satisfaction.
 
 ## Files
-- `BDA610_SINGHA_PATELD_YADAVK_PATELS.docx`: Detailed project report
+- `Final Project Report.docx`: Detailed project report
 - `BDA610_SINGHA_PATELD_YADAVK_PATELS.pdf`: R analysis output
 - `Project Dataset.xlsx`: Raw passenger survey data
 
