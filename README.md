@@ -6,9 +6,10 @@ Statistical analysis of airline passenger satisfaction using R, analyzing factor
 This project analyzes airline passenger satisfaction data to understand key factors affecting customer satisfaction levels. The analysis uses statistical methods including multiple regression models and logistic regression to identify the most significant contributors to passenger satisfaction.
 
 ## Files
-- `Final Project Report.docx`: Detailed project report
-- `BDA610_SINGHA_PATELD_YADAVK_PATELS.pdf`: R analysis output
-- `Project Dataset.xlsx`: Raw passenger survey data
+- `Project Dataset.xlsx`: Passenger survey data (12.7 MB)
+- `Final Project.Rmd`: R Markdown analysis code
+- `RMD Kit File.html`: Rendered analysis output
+- `Final Project Report.docx`: Detailed project documentation
 
 ## Key Findings
 - Flight delays significantly impact satisfaction (0.5% decrease per minute of delay)
