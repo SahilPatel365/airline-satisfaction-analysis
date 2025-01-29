@@ -1,0 +1,285 @@
+---
+title: "Adv. Stats Project- Customer Satisfaction"
+output: html_document
+date: "2024-02-13"
+---
+
+```{r}
+library(magrittr)
+library(tidyverse)
+library(dplyr)
+library(car)
+library(ggplot2)
+```
+
+
+# Reading Data
+
+```{r}
+setwd("C:/Users/sgpat/Downloads/BDA 610-Advanced Business Statistics Section-A19C/Project")
+library(readxl)
+Project <- read_excel("Project.xlsx")
+head(Project)
+str(Project)
+```
+
+#Data Cleaning
+
+##Renaming the Variables
+
+```{r}
+Project <- dplyr::rename(Project, Feedback = satisfaction_v2,
+                         cust_type = 'Customer Type',
+                         travel_type = 'Type of Travel',
+                         distance = 'Flight Distance',
+                         seat_comfort = 'Seat comfort',
+                         time_convenient = 'Departure/Arrival time convenient',
+                         food_drink = 'Food and drink',
+                         gate_location = 'Gate location',
+                         wifi_service = 'Inflight wifi service',
+                         entertainment = 'Inflight entertainment',
+                         online_support = 'Online support',
+                         online_booking = 'Ease of Online booking',
+                         on_board_serv = 'On-board service',
+                         leg_room = 'Leg room service',
+                         baggage_handling = 'Baggage handling',
+                         checkin_serv = 'Checkin service',
+                         cleanliness = 'Cleanliness',
+                         online_boarding = 'Online boarding',
+                         depart_delay = 'Departure Delay in Minutes',
+                         arrival_delay = 'Arrival Delay in Minutes')
+
+head(Project)
+```
+
+##cleaning NA and NaN
+
+```{r}
+Project[is.na(Project) | Project == "Inf"] = NA
+
+Project <- Project %>% 
+  filter(!is.na(Feedback) & !is.na(Gender) & !is.na(cust_type) & !is.na(Age) & !is.na(travel_type) & !is.na(Class) & !is.na(distance) & !is.na(seat_comfort) & !is.na(time_convenient) & !is.na(food_drink) & !is.na(gate_location) & !is.na(wifi_service) & !is.na(entertainment) & !is.na(online_support) & !is.na(online_booking) & !is.na(on_board_serv) & !is.na(leg_room) & !is.na(baggage_handling) & !is.na(checkin_serv) & !is.na(cleanliness) & !is.na(online_boarding) & !is.na(depart_delay) & !is.na(arrival_delay))
+```
+
+##Missing Data
+
+```{r}
+Project <- Project %>% 
+  filter(!Feedback == "")
+
+Project <- Project %>% 
+  filter(!Gender == "")
+
+Project <- Project %>% 
+  filter(!cust_type == "")
+
+Project <- Project %>% 
+  filter(!Age == "")
+
+Project <- Project %>% 
+  filter(!travel_type == "")
+
+Project <- Project %>% 
+  filter(!Class == "")
+
+Project <- Project %>% 
+  filter(!distance == "")
+
+Project <- Project %>% 
+  filter(!seat_comfort == "")
+
+Project <- Project %>% 
+  filter(!time_convenient == "")
+
+Project <- Project %>% 
+  filter(!food_drink == "")
+
+Project <- Project %>% 
+  filter(!gate_location == "")
+
+Project <- Project %>% 
+  filter(!wifi_service == "")
+
+Project <- Project %>% 
+  filter(!entertainment == "")
+
+Project <- Project %>% 
+  filter(!online_support == "")
+
+Project <- Project %>% 
+  filter(!online_booking == "")
+
+Project <- Project %>% 
+  filter(!on_board_serv == "")
+
+Project <- Project %>% 
+  filter(!leg_room == "")
+
+Project <- Project %>% 
+  filter(!baggage_handling == "")
+
+Project <- Project %>% 
+  filter(!checkin_serv == "")
+
+Project <- Project %>% 
+  filter(!cleanliness == "")
+
+Project <- Project %>% 
+  filter(!online_boarding == "")
+
+Project <- Project %>% 
+  filter(!on_board_serv == "")
+
+Project <- Project %>% 
+  filter(!depart_delay == "")
+
+Project <- Project %>% 
+  filter(!arrival_delay == "")
+```
+
+#Linear Regression Model:
+
+##Creating dummy variable for outcome variable:
+
+```{r}
+Project$Feedbackdummy <- ifelse(Project$Feedback == "satisfied", 1, 0)
+head(Project)
+```
+# Factorising the categorical variables:
+
+```{r}
+Project$seat_comfort2 <- ifelse(Project$seat_comfort <3, "Bad", "Good")
+Project$time_convenient2 <- ifelse(Project$time_convenient <3, "Bad", "Good")
+Project$food_drink2 <- ifelse(Project$food_drink <3, "Bad", "Good")
+Project$gate_location2 <- ifelse(Project$gate_location <3, "Bad", "Good")
+Project$wifi_service2 <- ifelse(Project$wifi_service <3, "Bad", "Good")
+Project$entertainment2 <- ifelse(Project$entertainment <3, "Bad", "Good")
+Project$online_support2 <- ifelse(Project$online_support <3, "Bad", "Good")
+Project$online_booking2 <- ifelse(Project$online_booking <3, "Bad", "Good")
+Project$on_board_serv2 <- ifelse(Project$on_board_serv <3, "Bad", "Good")
+Project$leg_room2 <- ifelse(Project$leg_room <3, "Bad", "Good")
+Project$checkin_serv2 <- ifelse(Project$checkin_serv <3, "Bad", "Good")
+Project$baggage_handling2 <- ifelse(Project$baggage_handling <3, "Bad", "Good")
+Project$cleanliness2 <- ifelse(Project$cleanliness <3, "Bad", "Good")
+Project$online_boarding2 <- ifelse(Project$online_boarding <3, "Bad", "Good")
+
+
+head(Project)
+```
+
+
+
+```{r}
+Project <- dplyr::select(Project, Feedback,Gender,cust_type,Age,travel_type,Class,distance,seat_comfort2,time_convenient2,food_drink2,gate_location2,wifi_service2,entertainment2,online_support2,online_booking2,on_board_serv2,leg_room2,checkin_serv2,baggage_handling2,cleanliness2,online_boarding2,depart_delay,arrival_delay,Feedbackdummy)
+
+head(Project)
+```
+#21 Variab
+```{r}
+model_1 <- lm(Feedbackdummy ~ . -Feedback, data = Project)
+summary(model_1)
+```
+
+
+```{r}
+model_2 <- lm(Feedbackdummy ~ . -Feedback -gate_location2 -time_convenient2 -online_support2 -wifi_service2 - baggage_handling2, data = Project)
+summary(model_2)
+```
+```{r}
+model_3 <- lm(Feedbackdummy ~ . -Feedback -gate_location2 -time_convenient2 -online_support2 -wifi_service2 - baggage_handling2 -cleanliness2 -depart_delay, data = Project)
+summary(model_3)
+```
+
+
+
+```{r}
+vif(model_1)
+```
+
+
+```{r}
+plot(model_1) + abline()
+```
+
+```{r}
+contrasts(as.factor(Project$Feedback))
+```
+
+
+```{r warning=FALSE}
+model_4 <- glm(as.factor(Feedback) ~ . -Feedbackdummy -gate_location2 -time_convenient2 -online_support2 -wifi_service2 - baggage_handling2, data = Project, family = binomial)
+summary(model_4)
+```
+
+```{r}
+vif(model_2)
+```
+
+```{r}
+cor(Project$depart_delay, Project$arrival_delay)
+```
+
+
+```{r}
+plot(model_2) + abline()
+```
+
+```{r}
+int_1 <- glm(Feedbackdummy ~ seat_comfort2*leg_room2, data = Project)
+summary(int_1)
+```
+```{r}
+```
+
+
+```{r}
+model_5 <- glm(as.factor(Feedback) ~ . -Feedbackdummy -gate_location2 -time_convenient2 -online_support2 -wifi_service2 - baggage_handling2 + seat_comfort2*leg_room2, data = Project, family = binomial)
+summary(model_5)
+```
+
+```{r}
+model_6 <- glm(as.factor(Feedback) ~ . -Feedbackdummy -gate_location2 -time_convenient2 -online_support2 -wifi_service2 - baggage_handling2 + seat_comfort2*leg_room2 -depart_delay, data = Project, family = binomial)
+summary(model_6)
+```
+```{r}
+vif(model_5)
+```
+
+
+```{r}
+plot(model_3) + abline()
+```
+
+```{r}
+Project$pred_prob <- predict(model_3, type = "response")
+Project$pred_feedback <- ifelse(Project$pred_prob > 0.5, "satisfied", "neutral or dissatisfied")
+head(Project)
+```
+
+```{r}
+table(Project$pred_feedback, Project$Feedback)
+```
+
+```{r}
+mean(Project$pred_feedback == Project$Feedback)
+```
+
+#Data Visualisation:
+
+##Histogram
+```{r}
+ggplot(Project) + geom_bar(mapping = aes(x=Feedback, fill = Feedback))
+```
+##Boxplot
+```{r}
+ggplot(data = Project, aes(x = Age, y = Feedback)) + geom_boxplot(aes(color = Feedback))
+```
+
+```{r}
+ggplot(data = Project, aes(x = distance, y = Feedback)) + geom_boxplot(aes(color = Feedback))
+```
+
+```{r}
+ggplot(Project, aes(x = Class, fill = Feedback)) +
+  geom_bar(position = "dodge", stat = "count")
+```
